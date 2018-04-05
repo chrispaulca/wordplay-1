@@ -12,7 +12,7 @@ def search():
     return render_template('search.html')
 
 
-@app.route("/<word>")
+@app.route("/?<word>")
 def playlist(word):   
     
     # Display the playlist for a word/phrase
