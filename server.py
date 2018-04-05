@@ -16,15 +16,9 @@ def index():
     return render_template('search.html', form=search)
 
 
-<<<<<<< HEAD
-@app.route("/?<word>")
-def playlist(word):   
-    
-=======
 @app.route("/results")
 def playlist(search):
 
->>>>>>> fb45f93b47a22bc68dcbdd4f300f7e7c39de28f4
     # Display the playlist for a word/phrase
     with open("data/sample_output.txt", "r") as f:
         playlist = f.read()
