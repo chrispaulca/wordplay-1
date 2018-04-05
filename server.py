@@ -1,7 +1,7 @@
 import sys
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import ast
-import forms
+from forms import SearchForm
 
 word = 'khoury' # THIS WILL COME FROM THE USER SEARCH
 
@@ -19,13 +19,11 @@ def index():
 @app.route("/results")
 def playlist(search):
 
-    print search
-
     # Display the playlist for a word/phrase
     with open("data/sample_output.txt", "r") as f:
         playlist = f.read()
         playlist = ast.literal_eval(playlist)
 
-    return render_template('playlist.html', playlist=playlist, word=word)
+    return render_template('playlist.html', playlist=playlist, word=search.data['search'])
 
 app.run(host='0.0.0.0', port=80)
