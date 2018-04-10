@@ -3,8 +3,6 @@ from flask import Flask, render_template, request
 import ast
 from forms import SearchForm
 
-word = 'khoury' # THIS WILL COME FROM THE USER SEARCH
-
 app = Flask(__name__)
 
 @app.route("/", methods=['GET', 'POST'])
