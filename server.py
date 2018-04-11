@@ -2,9 +2,11 @@ import sys
 import ast
 from flask import Flask, render_template, request
 from forms import SearchForm
+from worddict import *
 
 app = Flask(__name__)
 
+init_dict()
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -24,11 +26,8 @@ def playlist(search):
     """
     Reads in the playlist information and displays to the user
     """
-    # Display the playlist for a word/phrase
-    with open("data/sample_output.txt", "r") as f:
-        playlist = f.read()
-        playlist = ast.literal_eval(playlist)
-
+    playlist = find_song_by_word(search.data['search'])
+    print(playlist)
     return render_template('playlist.html', playlist=playlist,
                            word=search.data['search'])
 

@@ -33,6 +33,7 @@ def gettext_xml(xmltext):
         ret_str += ' '
     return ret_str
 
+
 def words(text):
     """
     Given a string, return a list of words normalized as follows.
@@ -66,6 +67,7 @@ def tokenize(text):
             goodwords += ' '
     tokenized_text = nltk.word_tokenize(goodwords)
     return tokenized_text
+
 
 def stemwords(words):
     """
@@ -102,6 +104,7 @@ def compute_tfidf(corpus):
     tfidf.fit(text_list)
     return tfidf
 
+
 def summarize(tfidf, text, n=0):
     """
     Given a trained TfidfVectorizer object and some XML text, return
@@ -125,7 +128,6 @@ def summarize(tfidf, text, n=0):
     else:
         max_output_len = n if len(tuple_list) > n else len(tuple_list)
     return tuple_list[:max_output_len]
-
 
 
 def load_corpus(zipfilename):
