@@ -1,4 +1,4 @@
-"""Scrapes songs from Wikipedia. Code towards end of tile is from
+"""Scrapes songs from Wikipedia. Code towards end of file is from
 https://github.com/rocheio/wiki-table-scrape/blob/master/wikitablescrape.py
 """
 
@@ -149,7 +149,7 @@ def scrape_albums_2014_2017(url):
     return albums, artists, album_urls
 
 
-def get_all_songs_(albums, artists, album_urls, folder_name):
+def get_songs_year(albums, artists, album_urls, folder_name):
     """Create dataframe of all songs in a list of albums in a year 
     ARGS:
     albums_url (str): The URL of the Wikipedia article to scrape from.
