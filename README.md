@@ -1,4 +1,6 @@
 # wordplay
 WordPlay Playlist Generator
 
-Created by Kaya Tollas, Si Chen, Chris Csiszar, Khoury Ibrahim, Sangyu Shen, and Devin Bowers
+Created by Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, Sangyu Shen, and Kaya Tollas
+
+This is the source of WordPlay, a word-based playlist generator that, when given any word or phrase, creates a playlist of related songs. 
