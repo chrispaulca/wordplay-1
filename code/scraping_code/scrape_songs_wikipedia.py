@@ -45,7 +45,7 @@ def songs_from_album(album_url):
     return songs
 
 
-def songs_from_artists_albums(albums, artists, album_urls, folder_name=None):
+def songs_from_artists_albums_year(albums, artists, album_urls):
     """Create dataframe of all songs in a list of albums in a year 
     ARGS:
     albums_url (str): The URL of the Wikipedia article to scrape from.
@@ -68,7 +68,6 @@ def songs_from_artists_albums(albums, artists, album_urls, folder_name=None):
 
     df = pd.DataFrame(final_songs, columns = ['Song', 'Artist','Album'])
     return df
-#     df.to_csv('{}.csv'.format(output_dir), index=False) 
 
 
 def scrape_billboards(start_url,search_str):
@@ -84,15 +83,19 @@ def scrape_billboards(start_url,search_str):
     billboards = [l['href'] for l in links if search_str in l['title']]
     billboards = ['https://en.wikipedia.org' + b for b in billboards]
     billboards.append(start_url)
-    return billboards
 
-    # folder_name = search_str.replace(' ','_')
-    # if singles:
-    #     for b in billboards:
-    #         scrape_singles(b, folder_name)
-    # else:
-    #     for b in billboards:
-    #         scrape_albums(b, folder_name)
+    folder_name = search_str.replace(' ','_')
+    if singles:
+        for b in billboards:
+            scrape_singles(b, folder_name)
+    else:
+        bb_number = re.findall(r'\d+', search_str)[0]
+        for b in billboards:
+            year = int([e for e in re.findall(r'\d+', b) if e != bb_number][0])
+            if year >= 1956 and year < 2014:
+                al, ar, al_ur = scrape_albums_1956_2013(b)
+                songs = songs_from_artists_albums_year(al, ar, al_ur)
+    
     
 
 def scrape_albums_1956_2013(url):
@@ -153,6 +156,8 @@ def get_songs_year(albums, artists, album_urls, folder_name):
     """Create dataframe of all songs in a list of albums in a year 
     ARGS:
     albums_url (str): The URL of the Wikipedia article to scrape from.
+
+    TODO: fix
     """
 
     if not os.path.exists(folder_name):
