@@ -1,3 +1,1 @@
-make.bat
-/build
-/source
+__pycache__/*

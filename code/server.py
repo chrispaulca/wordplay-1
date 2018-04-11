@@ -33,4 +33,4 @@ def playlist(search):
                            word=search.data['search'])
 
 
-app.run(host='0.0.0.0', port=80)
+# app.run(host='0.0.0.0', port=80)
