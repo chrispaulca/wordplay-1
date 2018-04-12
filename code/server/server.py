@@ -2,15 +2,13 @@
 This is the flask code for the webpage
 """
 
-import sys
-import ast
 from flask import Flask, render_template, request
 from forms import SearchForm
 from worddict import *
 
 app = Flask(__name__)
-
 init_dict()
+
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -36,4 +34,4 @@ def playlist(search):
                            word=search.data['search'])
 
 
-# app.run(host='0.0.0.0', port=80)
+app.run(host='0.0.0.0', port=80)

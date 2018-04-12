@@ -62,17 +62,18 @@ def init_dict():
     variable <id_lyric_map> and construct the word dictionary
     <word_lyric_score_map> based on tfidf.
     """
-    song_lyric_file = sys.argv[1]
-    client = boto3.client('s3')
-    obj = client.get_object(Bucket=s3_bucket, Key=song_lyric_file)
-    body = obj['Body']
-    csv_string = body.read().decode('utf-8')
-    df = pd.read_csv(StringIO(csv_string))
+    # song_lyric_file = sys.argv[1]
+    # client = boto3.client('s3')
+    # obj = client.get_object(Bucket=s3_bucket, Key=song_lyric_file)
+    # body = obj['Body']
+    # csv_string = body.read().decode('utf-8')
+    # df = pd.read_csv(StringIO(csv_string))
 
-    # df = pd.read_csv('https://s3-us-west-2.amazonaws.com/sc697/100_songs.csv')
-    # the above line is for public s3 dataset's link. When we use a public s3 
-    # bucket, uncomment the above line, fillin the public link  and comment the first
-    # chunk
+    s3_file = 'https://s3-us-west-2.amazonaws.com/sc697/100_songs.csv'
+    df = pd.read_csv(s3_file)
+    # the above line is for public s3 dataset's link. When we use a public
+    # s3 bucket, uncomment the above line, fillin the public link  and
+    # comment the first chunk
 
     for _, row in df.iterrows():
         id = row[0]
