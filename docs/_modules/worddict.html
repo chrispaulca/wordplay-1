@@ -92,7 +92,7 @@
         <span class="k">for</span> <span class="nb">tuple</span> <span class="ow">in</span> <span class="n">tuple_list</span><span class="p">:</span>
             <span class="n">song_name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">id_lyric_map</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">song_name_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;!!! Nothing Sorry !!!&#39;</span><span class="p">]</span>
+        <span class="n">song_name_list</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;No results :(&#39;</span><span class="p">,</span> <span class="s1">&#39;Please try again.&#39;</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">song_name_list</span></div>
 
 
@@ -103,17 +103,18 @@
 <span class="sd">    variable &lt;id_lyric_map&gt; and construct the word dictionary</span>
 <span class="sd">    &lt;word_lyric_score_map&gt; based on tfidf.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">song_lyric_file</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">s3_bucket</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">song_lyric_file</span><span class="p">)</span>
-    <span class="n">body</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;Body&#39;</span><span class="p">]</span>
-    <span class="n">csv_string</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">csv_string</span><span class="p">))</span>
+    <span class="c1"># song_lyric_file = sys.argv[1]</span>
+    <span class="c1"># client = boto3.client(&#39;s3&#39;)</span>
+    <span class="c1"># obj = client.get_object(Bucket=s3_bucket, Key=song_lyric_file)</span>
+    <span class="c1"># body = obj[&#39;Body&#39;]</span>
+    <span class="c1"># csv_string = body.read().decode(&#39;utf-8&#39;)</span>
+    <span class="c1"># df = pd.read_csv(StringIO(csv_string))</span>
 
-    <span class="c1"># df = pd.read_csv(&#39;https://s3-us-west-2.amazonaws.com/sc697/100_songs.csv&#39;)</span>
-    <span class="c1"># the above line is for public s3 dataset&#39;s link. When we use a public s3 </span>
-    <span class="c1"># bucket, uncomment the above line, fillin the public link  and comment the first</span>
-    <span class="c1"># chunk</span>
+    <span class="n">s3_file</span> <span class="o">=</span> <span class="s1">&#39;https://s3-us-west-2.amazonaws.com/sc697/100_songs.csv&#39;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">s3_file</span><span class="p">)</span>
+    <span class="c1"># the above line is for public s3 dataset&#39;s link. When we use a public</span>
+    <span class="c1"># s3 bucket, uncomment the above line, fillin the public link  and</span>
+    <span class="c1"># comment the first chunk</span>
 
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
