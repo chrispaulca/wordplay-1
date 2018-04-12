@@ -93,7 +93,8 @@ def init_dict():
     sort_by_score(word_lyric_score_map)
 
     # Save word_lyric_score_map to local csv file just for debugging purpose.
-    with open('word_lyric_score_map.csv', 'w', newline='') as csvfile:
+    # with open('word_lyric_score_map.csv', 'w', newline='') as csvfile:
+    with open('word_lyric_score_map.csv', 'w') as csvfile:
         fieldnames = ['word', 'maps']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()

@@ -170,7 +170,7 @@ def genius_scrape(document):
                     iteration, encoding='utf-8')
 
         # we quit and restart the browser every so often to clear the browser's
-        cache and prevent hangups,
+       # cache and prevent hangups,
         # timeouts, and hopefully the throttling of suspicious activity
         driver.quit()
 
