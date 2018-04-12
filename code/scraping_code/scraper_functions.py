@@ -161,7 +161,7 @@ def genius_scrape(document):
                 lyrics_gotten = 1
 
             # not the best except clause but will do for now
-            except:
+            except (RuntimeError, TypeError, NameError):
 
                 if lyrics_gotten == 0:
                     lyrics_raw.append("error")
