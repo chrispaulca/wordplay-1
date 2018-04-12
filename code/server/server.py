@@ -1,3 +1,7 @@
+"""
+This is the flask code for the webpage
+"""
+
 import sys
 import ast
 from flask import Flask, render_template, request
