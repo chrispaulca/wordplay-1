@@ -1,7 +1,7 @@
 """
 @author: Kaya Tollas
 
-Scrapes songs from Wikipedia. The functions clean_data, write_html_table_to_csv,
+Scrapes songs from Wikipedia. Functions clean_data, write_html_table_to_csv,
 and scrape_singles towards end of file are from
 https://github.com/rocheio/wiki-table-scrape/blob/master/wikitablescrape.py
 
@@ -289,12 +289,7 @@ def clean_data(row):
 
         cleaned = ''.join(no_footnotes)
         cleaned = unidecode.unidecode(cleaned)
-        cleaned = (cleaned
-              # Replace non-breaking spaces
-            .replace('\xa0', ' ')
-            .replace('\n', ' ')  # Replace newlines
-            .strip()
-        )
+        cleaned = cleaned.replace('\xa0', ' ').replace('\n', ' ').strip()
         cleaned_cells += [cleaned]
 
     return cleaned_cells
@@ -305,6 +300,6 @@ if __name__ == '__main__':
     search_str = 'List of Billboard number-one singles'
     scrape_billboards(surl, search_str, singles=True)
 
-    # alurl = WIKI_BASE + '/wiki/List_of_Billboard_200_number-one_albums_of_2017'
+    # url = WIKI_BASE + '/wiki/List_of_Billboard_200_number-one_albums_of_2017'
     # search_str = 'List of Billboard 200 number-one albums of'
-    # scrape_billboards(alurl, search_str, singles=False)
+    # scrape_billboards(url, search_str, singles=False)

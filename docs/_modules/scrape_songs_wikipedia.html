@@ -42,7 +42,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@author: Kaya Tollas</span>
 
-<span class="sd">Scrapes songs from Wikipedia. The functions clean_data, write_html_table_to_csv,</span>
+<span class="sd">Scrapes songs from Wikipedia. Functions clean_data, write_html_table_to_csv,</span>
 <span class="sd">and scrape_singles towards end of file are from</span>
 <span class="sd">https://github.com/rocheio/wiki-table-scrape/blob/master/wikitablescrape.py</span>
 
@@ -330,12 +330,7 @@
 
         <span class="n">cleaned</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">no_footnotes</span><span class="p">)</span>
         <span class="n">cleaned</span> <span class="o">=</span> <span class="n">unidecode</span><span class="o">.</span><span class="n">unidecode</span><span class="p">(</span><span class="n">cleaned</span><span class="p">)</span>
-        <span class="n">cleaned</span> <span class="o">=</span> <span class="p">(</span><span class="n">cleaned</span>
-              <span class="c1"># Replace non-breaking spaces</span>
-            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>  <span class="c1"># Replace newlines</span>
-            <span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="p">)</span>
+        <span class="n">cleaned</span> <span class="o">=</span> <span class="n">cleaned</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">cleaned_cells</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cleaned</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">cleaned_cells</span></div>
@@ -346,9 +341,9 @@
     <span class="n">search_str</span> <span class="o">=</span> <span class="s1">&#39;List of Billboard number-one singles&#39;</span>
     <span class="n">scrape_billboards</span><span class="p">(</span><span class="n">surl</span><span class="p">,</span> <span class="n">search_str</span><span class="p">,</span> <span class="n">singles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># alurl = WIKI_BASE + &#39;/wiki/List_of_Billboard_200_number-one_albums_of_2017&#39;</span>
+    <span class="c1"># url = WIKI_BASE + &#39;/wiki/List_of_Billboard_200_number-one_albums_of_2017&#39;</span>
     <span class="c1"># search_str = &#39;List of Billboard 200 number-one albums of&#39;</span>
-    <span class="c1"># scrape_billboards(alurl, search_str, singles=False)</span>
+    <span class="c1"># scrape_billboards(url, search_str, singles=False)</span>
 </pre></div>
 
           </div>

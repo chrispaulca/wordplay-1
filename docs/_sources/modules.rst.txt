@@ -17,7 +17,6 @@ algorithms
 
    tfidf
    worddict
-   worddict_s3_pull
 
 server
 ======
