@@ -6,7 +6,6 @@ from random import randint
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import sqlite3
 from os.path import expanduser
 import os
 import codecs
