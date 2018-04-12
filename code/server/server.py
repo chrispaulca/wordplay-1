@@ -30,7 +30,8 @@ def playlist(search):
     """
     Reads in the playlist information and displays to the user
     """
-    playlist = find_song_by_word(search.data['search'].lower)
+    playlist = find_song_by_word(search.data['search'].lower())
+    print(playlist)
     return render_template('playlist.html', playlist=playlist,
                            word=search.data['search'])
 
