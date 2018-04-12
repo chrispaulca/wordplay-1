@@ -15,9 +15,9 @@ WIKI_BASE = 'https://en.wikipedia.org'
 
 
 def songs_from_album(album_url):
-    """Returns list of songs from Wikipedia album page
-    ARGS:
-        album_url (str): The full URL of the Wikipedia page to scrape from.
+    """Returns list of songs from Wikipedia album page \n
+    ARGS: \n
+        album_url (str): The URL of the Wikipedia page to scrape from.
     """
     resp = requests.get(album_url)
     soup = BeautifulSoup(resp.content, 'html.parser')
@@ -47,9 +47,9 @@ def songs_from_album(album_url):
 
 
 def scrape_billboards(start_url, search_str, singles=False):
-    """Returns list of Billboard links (one for each year)
-    ARGS:
-    start_url (str): The URL of the Wikipedia article to scrape tables from.
+    """Returns list of Billboard links (one for each year) \n
+    ARGS: \n
+    start_url (str): The URL of the Wikipedia article to scrape tables from. \n
     search_str (str): The title of the table with the series of years
     """
     # get links for Billboard 200 singles for each year (1959-2018)
@@ -81,8 +81,8 @@ def scrape_billboards(start_url, search_str, singles=False):
 
 
 def songs_from_artists_albums_year(artists, album_urls):
-    """Create dataframe of all songs in a list of albums in a year
-    ARGS:
+    """Create dataframe of all songs in a list of albums in a year \n
+    ARGS: \n
     albums_url (str): The URL of the Wikipedia article to scrape from.
     """
     print('getting songs from albums')
@@ -108,8 +108,8 @@ def songs_from_artists_albums_year(artists, album_urls):
 
 
 def scrape_albums_1956_2013(url):
-    """Returns lists of albums and artists for Billboards that year (1956-2013)
-    ARGS:
+    """Returns lists of albums and artists for Billboards that year (1956-2013)\n
+    ARGS: \n
     url (str): The URL of the Wikipedia article to scrape from.
     """
     resp = requests.get(url)
@@ -132,8 +132,8 @@ def scrape_albums_1956_2013(url):
 
 
 def scrape_albums_2014_2017(url):
-    """Returns lists of albums and artists for Billboards that year (2014-2017)
-    ARGS:
+    """Returns lists of artists and urls for Billboards that year (2014-2017)\n
+    ARGS: \n
     url (str): The URL of the Wikipedia article to scrape from.
     """
     resp = requests.get(url)
@@ -158,9 +158,9 @@ def scrape_albums_2014_2017(url):
 
 
 def scrape_singles(url, folder_name=None):
-    """Create CSVs from all tables in a Wikipedia article.
-    ARGS:
-        url (str): The full URL of the Wikipedia article to scrape tables from.
+    """Create CSVs from all tables in a Wikipedia article. \n
+    ARGS: \n
+        url (str): The URL of the Wikipedia article to scrape tables from. \n
         output_name (str): The base file name (without filepath) to write to.
     """
 
@@ -202,9 +202,9 @@ def scrape_singles(url, folder_name=None):
 
 
 def write_html_table_to_csv(table, writer):
-    """Write HTML table from Wikipedia to a CSV file.
-    ARGS:
-        table (bs4.Tag): The bs4 Tag object being analyzed.
+    """Write HTML table from Wikipedia to a CSV file. \n
+    ARGS: \n
+        table (bs4.Tag): The bs4 Tag object being analyzed. \n
         writer (csv.writer): The csv Writer object creating the output.
     """
 
@@ -253,10 +253,10 @@ def write_html_table_to_csv(table, writer):
 
 
 def clean_data(row):
-    """Clean table row list from Wikipedia into a string for CSV.
-    ARGS:
-        row (bs4.ResultSet): The bs4 result set being cleaned for output.
-    RETURNS:
+    """Clean table row list from Wikipedia into a string for CSV. \n
+    ARGS: \n
+        row (bs4.ResultSet): The bs4 result set being cleaned for output. \n
+    RETURNS: \n
         cleaned_cells (list[str]): List of cleaned text items in this row.
     """
 
