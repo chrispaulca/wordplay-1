@@ -33,57 +33,86 @@
 <span></span><span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">from</span> <span class="nn">tfidf</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+<span class="c1"># Global variables</span>
 <span class="n">id_lyric_map</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">word_lyric_score_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">s3_bucket</span> <span class="o">=</span> <span class="s1">&#39;wordplaydata&#39;</span>
 
 
 <div class="viewcode-block" id="generate_word_lyric_score_map"><a class="viewcode-back" href="../worddict.html#worddict.generate_word_lyric_score_map">[docs]</a><span class="k">def</span> <span class="nf">generate_word_lyric_score_map</span><span class="p">(</span><span class="n">word_score_tuple_list</span><span class="p">,</span> <span class="n">song_id</span><span class="p">,</span> <span class="n">the_map</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given list of tuple (i.e. (word, score)) for a song and this song&#39;s id,</span>
+<span class="sd">    add the corresponding information to a dictionary (or map) &lt;the_map&gt;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="nb">tuple</span> <span class="ow">in</span> <span class="n">word_score_tuple_list</span><span class="p">:</span>
         <span class="n">word</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">score</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">id_score_list</span> <span class="o">=</span> <span class="n">the_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">id_score_list</span><span class="p">:</span>
             <span class="n">id_score_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">song_id</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># originally empty</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># originally empty</span>
             <span class="n">the_map</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">song_id</span><span class="p">,</span> <span class="n">score</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">the_map</span></div>
 
 
 <div class="viewcode-block" id="sort_by_score"><a class="viewcode-back" href="../worddict.html#worddict.sort_by_score">[docs]</a><span class="k">def</span> <span class="nf">sort_by_score</span><span class="p">(</span><span class="n">the_map</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    In the constructed dictionary &lt;word_lyric_score_map&gt;, sort the tuples</span>
+<span class="sd">    associated with each key word according to the tfidf scores in the</span>
+<span class="sd">    tuples, so that the tuples (id, score) having the higher scores are in</span>
+<span class="sd">    front of the dictionary value (i.e., the tuple list)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">the_map</span><span class="p">:</span>
         <span class="n">the_id_score_list</span> <span class="o">=</span> <span class="n">the_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-        <span class="n">the_id_score_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="nb">tuple</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># sort by score.</span>
+        <span class="n">the_id_score_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="nb">tuple</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">the_map</span></div>
 
 
 <div class="viewcode-block" id="find_song_by_word"><a class="viewcode-back" href="../worddict.html#worddict.find_song_by_word">[docs]</a><span class="k">def</span> <span class="nf">find_song_by_word</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a key &lt;word&gt; provided by the caller, return the list of tuple</span>
+<span class="sd">    (name, artist, album, lyric)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">song_name_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">tuple_list</span> <span class="o">=</span> <span class="n">word_lyric_score_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">tuple_list</span><span class="p">:</span>
         <span class="k">for</span> <span class="nb">tuple</span> <span class="ow">in</span> <span class="n">tuple_list</span><span class="p">:</span>
             <span class="n">song_name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">id_lyric_map</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">song_name_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39; !!! Nothing Sorry !!!&#39;</span><span class="p">]</span>
+        <span class="n">song_name_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;!!! Nothing Sorry !!!&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">song_name_list</span></div>
 
 
 <div class="viewcode-block" id="init_dict"><a class="viewcode-back" href="../worddict.html#worddict.init_dict">[docs]</a><span class="k">def</span> <span class="nf">init_dict</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the dictionary for later on searching.</span>
+<span class="sd">    Load the csv raw source file from S3 and put the content into global</span>
+<span class="sd">    variable &lt;id_lyric_map&gt; and construct the word dictionary</span>
+<span class="sd">    &lt;word_lyric_score_map&gt; based on tfidf.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">song_lyric_file</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">song_lyric_file</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
-            <span class="nb">id</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">artist</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-            <span class="n">album</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-            <span class="n">lyric</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
-            <span class="n">id_lyric_map</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">artist</span><span class="p">,</span> <span class="n">album</span><span class="p">,</span> <span class="n">lyric</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">s3_bucket</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">song_lyric_file</span><span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;Body&#39;</span><span class="p">]</span>
+    <span class="n">csv_string</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">csv_string</span><span class="p">))</span>
 
-    <span class="c1"># remove the header, because we assume there is a header</span>
-    <span class="c1"># there is some other smarter way to detect if there is a header in the</span>
-    <span class="c1"># csv file so that we can delete it smartly</span>
-    <span class="k">del</span> <span class="n">id_lyric_map</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+    <span class="c1"># df = pd.read_csv(&#39;https://s3-us-west-2.amazonaws.com/sc697/100_songs.csv&#39;)</span>
+    <span class="c1"># the above line is for public s3 dataset&#39;s link. When we use a public s3 </span>
+    <span class="c1"># bucket, uncomment the above line, fillin the public link  and comment the first</span>
+    <span class="c1"># chunk</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">artist</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">album</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">lyric</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+        <span class="n">id_lyric_map</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">artist</span><span class="p">,</span> <span class="n">album</span><span class="p">,</span> <span class="n">lyric</span><span class="p">)</span>
 
     <span class="n">tfidf</span> <span class="o">=</span> <span class="n">compute_tfidf</span><span class="p">(</span><span class="n">id_lyric_map</span><span class="p">)</span>
 
@@ -94,12 +123,20 @@
 
     <span class="n">sort_by_score</span><span class="p">(</span><span class="n">word_lyric_score_map</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;data/word_lyric_score_map.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+    <span class="c1"># Save word_lyric_score_map to local csv file just for debugging purpose.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;word_lyric_score_map.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
         <span class="n">fieldnames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="s1">&#39;maps&#39;</span><span class="p">]</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">fieldnames</span><span class="p">)</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">word_lyric_score_map</span><span class="p">:</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">({</span><span class="s1">&#39;word&#39;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span> <span class="s1">&#39;maps&#39;</span><span class="p">:</span> <span class="n">word_lyric_score_map</span><span class="p">[</span><span class="n">key</span><span class="p">]})</span></div>
+
+
+<span class="c1"># for testing this file only</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">init_dict</span><span class="p">()</span>
+    <span class="n">ret_list</span> <span class="o">=</span> <span class="n">find_song_by_word</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ret_list</span><span class="p">)</span>
 </pre></div>
 
           </div>
@@ -119,7 +156,9 @@
 <h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">scraping_code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#algorithms">algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#server">server</a></li>
 </ul>
 
 <div class="relations">
