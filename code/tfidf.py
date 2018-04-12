@@ -13,7 +13,11 @@ import zipfile
 import os
 PARTIALS = False
 
+
 def gettext_plain(text):
+    """
+    Assumes the input <text> is plain text and return it as string.
+    """
     ret_str = text
     return ret_str
 
@@ -22,12 +26,12 @@ def gettext_xml(xmltext):
     """
     Parse xmltext and return the text from <title> and <text> tags
     """
-    xmltext = xmltext.encode('ascii', 'ignore') # ensure there are no weird char
+    xmltext = xmltext.encode('ascii', 'ignore')  # ensure no weird char
     tree = ET.fromstring(xmltext)
     ret_str = ''
     for elem in tree.iterfind('title'):
         ret_str += elem.text
-    ret_str += ' ' # insert a space in the middle for seperation.
+    ret_str += ' '  # insert a space in the middle for seperation.
     for text_node in tree.iterfind('.//text/*'):
         ret_str += text_node.text
         ret_str += ' '
@@ -45,7 +49,8 @@ def words(text):
     Lowercase all words
     """
     regex = re.compile('[' + re.escape(string.punctuation) + '0-9\\r\\t\\n]')
-    nopunct = regex.sub(" ", text)  # delete stuff but leave at least a space to avoid clumping together
+    # delete stuff but leave at least a space to avoid clumping together
+    nopunct = regex.sub(" ", text)
     words = nopunct.split(" ")
     words = [w for w in words if len(w) > 2]  # ignore a, an, to, at, be, ...
     words = [w.lower() for w in words]
@@ -82,6 +87,9 @@ def stemwords(words):
 
 
 def tokenizer(text):
+    """
+    The tokenizer.
+    """
     return stemwords(tokenize(text))
 
 
@@ -92,15 +100,15 @@ def compute_tfidf(corpus):
     corpus argument is a dictionary mapping file name to xml text.
     """
     tfidf = TfidfVectorizer(input='content',
-                        analyzer='word',
-                        preprocessor=gettext_plain,
-                        tokenizer=tokenizer,
-                        stop_words='english',
-                        decode_error = 'ignore')
+                            analyzer='word',
+                            preprocessor=gettext_plain,
+                            tokenizer=tokenizer,
+                            stop_words='english',
+                            decode_error='ignore')
     # the key is: id
     # the value of corpus is: (name, artist, album, lyric)
     # corpus[key][3] is the lyric
-    text_list = [ corpus[key][3] for key in corpus ]
+    text_list = [corpus[key][3] for key in corpus]
     tfidf.fit(text_list)
     return tfidf
 
@@ -114,13 +122,15 @@ def summarize(tfidf, text, n=0):
     word_index_array = sparse_matrix.nonzero()[1]
     aaa = sparse_matrix.nonzero()[0]
     word_array = tfidf.get_feature_names()
-    tuple_list =[]
+    tuple_list = []
     for i in range(len(word_index_array)):
-        the_tuple = (word_array[word_index_array[i]], sparse_matrix[aaa[i], word_index_array[i]])
+        the_tuple = (word_array[word_index_array[i]],
+                     sparse_matrix[aaa[i],
+                     word_index_array[i]])
         if the_tuple[1] >= 0.09:
             tuple_list.append(the_tuple)
 
-    tuple_list.sort(key = lambda tup: tup[1], reverse=True)
+    tuple_list.sort(key=lambda tup: tup[1], reverse=True)
 
     # n == 0 means output everything, otherwise only output n tuples
     if n == 0:
@@ -143,12 +153,13 @@ def load_corpus(zipfilename):
     ret_dict = {}
     full_path = os.path.expanduser(zipfilename)
     path_to_extract = full_path.split(os.path.basename(full_path))[0]
-    zipref =  zipfile.ZipFile(full_path, 'r')
+    zipref = zipfile.ZipFile(full_path, 'r')
     zipref.extractall(path_to_extract)
     files_in_package = zipref.namelist()
     for file in files_in_package:
         file_basename = os.path.basename(file)
-        if file_basename == '': continue
+        if file_basename == '':
+            continue
         with open(path_to_extract + file, 'r') as xml_file:
             content = xml_file.read()
             ret_dict[file_basename] = content
