@@ -1,14 +1,28 @@
+# -*- coding: utf-8 -*-
+"""This module's docstring summary line.
+This is a multi-line docstring. Paragraphs are separated with blank lines.
+Lines conform to 79-column limit.
+Module and packages names should be short, lower_case_with_underscores.
+Notice that this in not PEP8-cheatsheet.py
+Seriously, use flake8. Atom.io with https://atom.io/packages/linter-flake8
+is awesome!
+See http://www.python.org/dev/peps/pep-0008/ for more PEP-8 details
+"""
+
+
+import glob
 import pandas as pd
 import numpy as np
-import glob
-import selenium
 from random import randint
 import time
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from os.path import expanduser
 import os
 import codecs
+from os.path import expanduser
+
+import selenium
+from selenium import webdriver
+
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -25,10 +39,14 @@ def cutt(s, n):
 def genius_scrape(document):
     """Takes song info and attempts to grab its lyrics from genius.com.
     
-    Takes a csv containing song title and artist information and attempts to scrape each record's 
-    lyrics if available through a generic search on Genius's website. Truncates artist field to two words.
-    Assumes columns named "Song" and "Artist" exist, and that the input is of csv format. As a 
-    safety measure, splits lengthy arrays into arrays approx 500 records long, to save progress 
+    Takes a csv containing song title and artist information and attempts to 
+    scrape each record's 
+    lyrics if available through a generic search on Genius's website. Truncates
+     artist field to two words.
+    Assumes columns named "Song" and "Artist" exist, and that the input is of 
+    csv format. As a 
+    safety measure, splits lengthy arrays into arrays approx 500 records long, 
+    to save progress 
     periodically and reload the scraping browser between sections.
     """
     
@@ -43,7 +61,8 @@ def genius_scrape(document):
     data_raw['artist_trunc'] = artists
     
     # define the search term to input on Genius' webpage
-    data_raw["search_term"] = data_raw["Song"].map(str) + ' ' + data_raw["artist_trunc"].map(str)
+    data_raw["search_term"] = data_raw["Song"].map(str) + ' ' + \
+        data_raw["artist_trunc"].map(str)
 
     # split lengthy files into pieces
     if len(data_raw) > 600:
@@ -77,31 +96,46 @@ def genius_scrape(document):
             lyrics_gotten = 0
 
             try:
-                #wait only the amount of time necessary for the specified HTML element to appear
+                #wait only the amount of time necessary for the specified HTML 
+                # element to appear
                 element = WebDriverWait(driver, 8).until(
-                    EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/search-form/form/input"))
+                    EC.presence_of_element_located((By.XPATH, \
+                        "/html/body/div[1]/search-form/form/input"))
                 )
 
-                search = driver.find_element_by_xpath('/html/body/div[1]/search-form/form/input')
+                search = driver.find_element_by_xpath(\
+                    '/html/body/div[1]/search-form/form/input')
                 
                 # send search term to search box and submit
                 search.send_keys(i)
                 search.submit()
 
                 element = WebDriverWait(driver, 8).until(
-                        EC.presence_of_element_located((By.XPATH, '/html/body/routable-page/ng-outlet/search-results-page/div/div[2]/div[1]/div[2]/search-result-section/div/div[2]/search-result-items/div[1]/search-result-item/div/mini-song-card/a/div[2]'))
+                        EC.presence_of_element_located((By.XPATH, \
+                            '/html/body/routable-page/ng-outlet/search-'
+                            'results-page/div/div[2]/div[1]/div[2]/search'
+                            '-result-section/div/div[2]/search-result-items/'
+                            'div[1]/search-result-item/div/mini-song-card/a/'
+                            'div[2]'))
                     )
                 
                 # click the top recommended song link
-                toplink = driver.find_element_by_xpath('/html/body/routable-page/ng-outlet/search-results-page/div/div[2]/div[1]/div[2]/search-result-section/div/div[2]/search-result-items/div[1]/search-result-item/div/mini-song-card/a/div[2]')
+                toplink = driver.find_element_by_xpath('/html/body/routable-'
+                    'page/ng-outlet/search-results-page/div/div[2]/div[1]/div'
+                    '[2]/search-result-section/div/div[2]/search-result-items/'
+                    'div[1]/search-result-item/div/mini-song-card/a/div[2]')
                 toplink.click()
 
                 element = WebDriverWait(driver, 8).until(
-                        EC.presence_of_element_located((By.XPATH, '/html/body/routable-page/ng-outlet/song-page/div/div/div[2]/div[1]/div/defer-compile[1]/lyrics/div/section'))
+                        EC.presence_of_element_located((By.XPATH, '/html/body/'
+                            'routable-page/ng-outlet/song-page/div/div/div[2]/'
+                            'div[1]/div/defer-compile[1]/lyrics/div/section'))
                     )
 
                 # grab lyrics
-                lyrics = driver.find_element_by_xpath('/html/body/routable-page/ng-outlet/song-page/div/div/div[2]/div[1]/div/defer-compile[1]/lyrics/div/section')
+                lyrics = driver.find_element_by_xpath('/html/body/routable-page'
+                    '/ng-outlet/song-page/div/div/div[2]/div[1]/div/defer-comp'
+                    'ile[1]/lyrics/div/section')
                 lyrics_text = lyrics.text
 
                 # append lyrics to results
@@ -119,9 +153,11 @@ def genius_scrape(document):
         # place scraped lyrics into our dataframe for identification
         elem['lyrics_raw'] = lyrics_raw
 
-        elem.to_csv(document[:-4] + "_lyrics_iteration_%d_marker.csv" % iteration, encoding='utf-8')
+        elem.to_csv(document[:-4] + "_lyrics_iteration_%d_marker.csv" % \
+            iteration, encoding='utf-8')
 
-        # we quit and restart the browser every so often to clear the browser's cache and prevent hangups,
+        # we quit and restart the browser every so often to clear the browser's 
+        cache and prevent hangups,
         # timeouts, and hopefully the throttling of suspicious activity
         driver.quit()
 
