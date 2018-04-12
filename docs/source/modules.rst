@@ -5,7 +5,7 @@ scraping_code
    :maxdepth: 4
 
    scrape_songs_wikipedia
-   scape_lyrics
+   scrape_lyrics
    scraper_functions
 
 
