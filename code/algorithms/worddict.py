@@ -51,7 +51,7 @@ def find_song_by_word(word):
         for tuple in tuple_list:
             song_name_list.append(id_lyric_map[tuple[0]])
     else:
-        song_name_list = ['!!! Nothing Sorry !!!']
+        song_name_list = [('No results :(', 'Please try again.')]
     return song_name_list
 
 
