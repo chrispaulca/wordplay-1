@@ -1,0 +1,7 @@
+initial\_scraper\_v1 module
+===========================
+
+.. automodule:: initial_scraper_v1
+    :members:
+    :undoc-members:
+    :show-inheritance:

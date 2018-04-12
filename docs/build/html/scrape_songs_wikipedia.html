@@ -1,0 +1,183 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>scrape_songs_wikipedia module &#8212; WordPlay 1.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="scraper_functions module" href="scraper_functions.html" />
+    <link rel="prev" title="scrape_lyrics module" href="scrape_lyrics.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-scrape_songs_wikipedia">
+<span id="scrape-songs-wikipedia-module"></span><h1>scrape_songs_wikipedia module<a class="headerlink" href="#module-scrape_songs_wikipedia" title="Permalink to this headline">¶</a></h1>
+<p>Scrapes songs from Wikipedia. Code towards end of file is from
+<a class="reference external" href="https://github.com/rocheio/wiki-table-scrape/blob/master/wikitablescrape.py">https://github.com/rocheio/wiki-table-scrape/blob/master/wikitablescrape.py</a></p>
+<dl class="function">
+<dt id="scrape_songs_wikipedia.clean_data">
+<code class="descclassname">scrape_songs_wikipedia.</code><code class="descname">clean_data</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scrape_songs_wikipedia.html#clean_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scrape_songs_wikipedia.clean_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean table row list from Wikipedia into a string for CSV.
+ARGS:</p>
+<blockquote>
+<div>row (bs4.ResultSet): The bs4 result set being cleaned for output.</div></blockquote>
+<dl class="docutils">
+<dt>RETURNS:</dt>
+<dd>cleaned_cells (list[str]): List of cleaned text items in this row.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="scrape_songs_wikipedia.scrape_albums_1956_2013">
+<code class="descclassname">scrape_songs_wikipedia.</code><code class="descname">scrape_albums_1956_2013</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scrape_songs_wikipedia.html#scrape_albums_1956_2013"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scrape_songs_wikipedia.scrape_albums_1956_2013" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns lists of albums and artists for Billboards that year (1956-2013)
+ARGS:
+url (str): The URL of the Wikipedia article to scrape from.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="scrape_songs_wikipedia.scrape_albums_2014_2017">
+<code class="descclassname">scrape_songs_wikipedia.</code><code class="descname">scrape_albums_2014_2017</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scrape_songs_wikipedia.html#scrape_albums_2014_2017"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scrape_songs_wikipedia.scrape_albums_2014_2017" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns lists of albums and artists for Billboards that year (2014-2017)
+ARGS:
+url (str): The URL of the Wikipedia article to scrape from.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="scrape_songs_wikipedia.scrape_billboards">
+<code class="descclassname">scrape_songs_wikipedia.</code><code class="descname">scrape_billboards</code><span class="sig-paren">(</span><em>start_url</em>, <em>search_str</em>, <em>singles=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scrape_songs_wikipedia.html#scrape_billboards"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scrape_songs_wikipedia.scrape_billboards" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of Billboard links (one for each year)
+ARGS:
+start_url (str): The URL of the Wikipedia article to scrape tables from.
+search_str (str): The title of the table with the series of years</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="scrape_songs_wikipedia.scrape_singles">
+<code class="descclassname">scrape_songs_wikipedia.</code><code class="descname">scrape_singles</code><span class="sig-paren">(</span><em>url</em>, <em>folder_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scrape_songs_wikipedia.html#scrape_singles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scrape_songs_wikipedia.scrape_singles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create CSVs from all tables in a Wikipedia article.
+ARGS:</p>
+<blockquote>
+<div>url (str): The full URL of the Wikipedia article to scrape tables from.
+output_name (str): The base file name (without filepath) to write to.</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="scrape_songs_wikipedia.songs_from_album">
+<code class="descclassname">scrape_songs_wikipedia.</code><code class="descname">songs_from_album</code><span class="sig-paren">(</span><em>album_url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scrape_songs_wikipedia.html#songs_from_album"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scrape_songs_wikipedia.songs_from_album" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of songs from Wikipedia album page
+ARGS:</p>
+<blockquote>
+<div>album_url (str): The full URL of the Wikipedia page to scrape from.</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="scrape_songs_wikipedia.songs_from_artists_albums_year">
+<code class="descclassname">scrape_songs_wikipedia.</code><code class="descname">songs_from_artists_albums_year</code><span class="sig-paren">(</span><em>artists</em>, <em>album_urls</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scrape_songs_wikipedia.html#songs_from_artists_albums_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scrape_songs_wikipedia.songs_from_artists_albums_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create dataframe of all songs in a list of albums in a year
+ARGS:
+albums_url (str): The URL of the Wikipedia article to scrape from.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="scrape_songs_wikipedia.write_html_table_to_csv">
+<code class="descclassname">scrape_songs_wikipedia.</code><code class="descname">write_html_table_to_csv</code><span class="sig-paren">(</span><em>table</em>, <em>writer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scrape_songs_wikipedia.html#write_html_table_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scrape_songs_wikipedia.write_html_table_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write HTML table from Wikipedia to a CSV file.
+ARGS:</p>
+<blockquote>
+<div>table (bs4.Tag): The bs4 Tag object being analyzed.
+writer (csv.writer): The csv Writer object creating the output.</div></blockquote>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">WordPlay</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">scraping_code</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="scrape_lyrics.html">scrape_lyrics module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">scrape_songs_wikipedia module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scraper_functions.html">scraper_functions module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">scraping_code</a><ul>
+      <li>Previous: <a href="scrape_lyrics.html" title="previous chapter">scrape_lyrics module</a></li>
+      <li>Next: <a href="scraper_functions.html" title="next chapter">scraper_functions module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, Sangyu Shen, and Kaya Tollas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/scrape_songs_wikipedia.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
