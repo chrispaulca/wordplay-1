@@ -1,9 +1,8 @@
-scraping_code
-=============
+server
+======
 
 .. toctree::
    :maxdepth: 4
 
-   scrape_lyrics
-   scrape_songs_wikipedia
-   scraper_functions
+   forms
+   server

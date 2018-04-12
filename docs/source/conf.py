@@ -20,6 +20,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../../code/'))
 sys.path.insert(0, os.path.abspath('../../code/scraping_code/'))
+sys.path.insert(0, os.path.abspath('../../code/algorithms/'))
+sys.path.insert(0, os.path.abspath('../../code/server/'))
 
 
 # -- General configuration ------------------------------------------------

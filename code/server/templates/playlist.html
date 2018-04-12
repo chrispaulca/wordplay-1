@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Playlist for {{word}}</title>
+</head>
+<style type="text/css">
+a:link {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+</style>
+<body>
+<h1 style="list-style:square; font-size:130%; font-family:Verdana,sans-serif">Playlist for {{word}}</h1>
+
+
+<ul>
+
+{% for song_artist in playlist %}
+<li style="list-style:square; font-size:70%; font-family:Verdana,sans-serif">
+    {{song_artist[0]}}, {{song_artist[1]}}
+</li>
+{% endfor %}
+
+</ul>
+
+</body>
+</html>

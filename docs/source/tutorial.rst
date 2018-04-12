@@ -1,9 +1,9 @@
-WordPlay code tutorial
+Tutorial
 ========================
 
 Data collection: 
 
-Go to code/scraping_code directory. Then run $python scrape_songs_wikipedia.py to scrape songs and run $python scrape_lyrics.py to scrape lyrics 
+Go to code/scraping_code directory. Then run `$python scrape_songs_wikipedia.py` to scrape songs and run $python scrape_lyrics.py to scrape lyrics 
 
 Algorithm:
 
