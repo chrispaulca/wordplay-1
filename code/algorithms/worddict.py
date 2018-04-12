@@ -69,7 +69,8 @@ def init_dict():
     # csv_string = body.read().decode('utf-8')
     # df = pd.read_csv(StringIO(csv_string))
 
-    s3_file = 'https://s3-us-west-2.amazonaws.com/sc697/100_songs.csv'
+    s3_file = 'https://s3-us-west-2.amazonaws.com/wordplaydata/' \
+              'lyrics_raw/100_songs.csv'
     df = pd.read_csv(s3_file)
     # the above line is for public s3 dataset's link. When we use a public
     # s3 bucket, uncomment the above line, fillin the public link  and
