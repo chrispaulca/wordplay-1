@@ -4,6 +4,7 @@ This is the flask code for the webpage
 
 from flask import Flask, render_template, request
 from forms import SearchForm
+import sys
 sys.path.insert(0, '../algorithms/')
 from worddict import *
 
