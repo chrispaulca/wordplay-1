@@ -6,10 +6,9 @@ from flask import Flask, render_template, request
 from forms import SearchForm
 from worddict import *
 
-
 app = Flask(__name__)
-
 init_dict()
+
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
