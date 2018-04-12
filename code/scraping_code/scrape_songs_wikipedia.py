@@ -10,6 +10,7 @@ https://github.com/rocheio/wiki-table-scrape/blob/master/wikitablescrape.py
 import os
 import re
 import csv
+import glob
 import platform
 import unidecode
 import requests
@@ -64,12 +65,12 @@ def scrape_billboards(start_url, search_str, singles=False):
     billboards = [l['href'] for l in links if search_str in l['title']]
     billboards = ['https://en.wikipedia.org' + b for b in billboards]
     billboards.append(start_url)
+    all_songs = []
     if singles:
         for b in billboards:
-            scrape_singles(b, folder_name)
+            scrape_singles(b)
     else:
         bb_number = re.findall(r'\d+', search_str)[0]
-        all_songs = []
         for b in billboards:
             year = int([e for e in re.findall(r'\d+', b) if e != bb_number][0])
             if year < 1956:
@@ -80,9 +81,10 @@ def scrape_billboards(start_url, search_str, singles=False):
                 ar, al_ur = scrape_albums_2014_2017(b)
             songs = songs_from_artists_albums_year(ar, al_ur)
             all_songs.append(songs)
-    songs_df = pd.concat(all_songs)
-    output_name = search_str.replace(' ', '_')
-    songs_df.to_csv('{}'.format(output_name), index=False)
+
+        output_name = search_str.replace(' ', '_')
+        songs_df = pd.concat(all_songs)
+        songs_df.to_csv('{}'.format(output_name), index=False)
 
 
 def songs_from_artists_albums_year(artists, album_urls):
@@ -200,8 +202,8 @@ def scrape_singles(url, folder_name=None):
     # combines all the songs
     songs_list = glob.glob(os.path.join(folder_name, "*.csv"))
     df = pd.concat([pd.read_csv(f) for f in songs_list])
-    df = df[['Title', 'Artist(s)']]
-    df.rename(columns={'Title': 'Song', 'Artist(s)': 'Artist'}, inplace=True)
+    df = df[['Single', 'Artist']]
+    df.rename(columns={'Single': 'Song'}, inplace=True)
     df['Song'] = df['Song'].str.strip('"')
     df.to_csv('{}.csv'.format(folder_name), index=False)
 
@@ -298,6 +300,10 @@ def clean_data(row):
 
 
 if __name__ == '__main__':
-    url = WIKI_BASE + '/wiki/List_of_Billboard_200_number-one_albums_of_2017'
-    search_str = 'List of Billboard 200 number-one albums of'
-    scrape_billboards(url, search_str)
+    surl = WIKI_BASE + '/wiki/List_of_best-selling_singles'
+    search_str = 'List of Billboard number-one singles'
+    scrape_billboards(surl, search_str, singles=True)
+
+    # alurl = WIKI_BASE + '/wiki/List_of_Billboard_200_number-one_albums_of_2017'
+    # search_str = 'List of Billboard 200 number-one albums of'
+    # scrape_billboards(alurl, search_str, singles=False)
