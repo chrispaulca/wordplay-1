@@ -1,4 +1,5 @@
-"""Scrapes songs from Wikipedia. Code towards end of file is from
+"""Scrapes songs from Wikipedia. Functions clean_data, write_html_table_to_csv,
+and scrape_singles from towards end of file is from
 https://github.com/rocheio/wiki-table-scrape/blob/master/wikitablescrape.py
 """
 
@@ -17,7 +18,7 @@ WIKI_BASE = 'https://en.wikipedia.org'
 def songs_from_album(album_url):
     """Returns list of songs from Wikipedia album page \n
     ARGS: \n
-        album_url (str): The URL of the Wikipedia page to scrape from.
+    album_url (str): The URL of the Wikipedia page to scrape from.
     """
     resp = requests.get(album_url)
     soup = BeautifulSoup(resp.content, 'html.parser')
@@ -108,7 +109,7 @@ def songs_from_artists_albums_year(artists, album_urls):
 
 
 def scrape_albums_1956_2013(url):
-    """Returns lists of albums and artists for Billboards that year (1956-2013)\n
+    """Returns lists of artists and urls for Billboards that year (1956-2013)\n
     ARGS: \n
     url (str): The URL of the Wikipedia article to scrape from.
     """

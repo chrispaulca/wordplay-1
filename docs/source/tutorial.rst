@@ -3,14 +3,14 @@ WordPlay code tutorial
 
 Data collection: 
 
-Run $scrape_songs_wikipedia.py in the code/scraping_code directory. Then
-scrape lyrics with $scrape_lyrics.py .
+Go to code/scraping_code directory. Then run $python scrape_songs_wikipedia.py to scrape songs and run $python scrape_lyrics.py to scrape lyrics 
 
 Algorithm:
 
-Run $tfidf.py in the code directory. Also run $worddict.py to generate 
+Go to code directory. Run $python tfidf.py and $python worddict.py to generate 
 {word:[(songID, TFIDF score), ... ]} and {word:[songID, ... ]} dictionaries. 
 
 
 Server:
-Run $server.py in the code directory. 
+
+Run $python server.py in the code directory. 
