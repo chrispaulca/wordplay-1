@@ -304,6 +304,7 @@ if __name__ == '__main__':
     search_str = 'List of Billboard number-one singles'
     scrape_billboards(surl, search_str, singles=True)
 
+    # album scrape
     # alurl = WIKI_BASE + '/wiki/List_of_Billboard_200_number-one_albums_of_2017'
     # search_str = 'List of Billboard 200 number-one albums of'
     # scrape_billboards(alurl, search_str, singles=False)
