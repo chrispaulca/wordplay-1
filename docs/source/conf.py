@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'WordPlay'
-copyright = u'2018, Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, Sangyu Shen, and Kaya Tollas'
+copyright = u'2018, Kaya Tollas, Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, and Sangyu Shen'
 author = u'Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, Sangyu Shen, and Kaya Tollas'
 
 # The version info for the project you're documenting, acts as replacement for
