@@ -1,6 +1,10 @@
-"""Scrapes songs from Wikipedia. Functions clean_data, write_html_table_to_csv,
-and scrape_singles from towards end of file is from
+"""
+@author: Kaya Tollas
+
+Scrapes songs from Wikipedia. The functions clean_data, write_html_table_to_csv,
+and scrape_singles towards end of file are from
 https://github.com/rocheio/wiki-table-scrape/blob/master/wikitablescrape.py
+
 """
 
 import os
