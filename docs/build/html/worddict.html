@@ -4,12 +4,20 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>worddict module &#8212; WordPlay 1.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -23,7 +31,8 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body>
   
 
     <div class="document">
@@ -31,40 +40,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-worddict">
-<span id="worddict-module"></span><h1>worddict module<a class="headerlink" href="#module-worddict" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="worddict.find_song_by_word">
-<code class="descclassname">worddict.</code><code class="descname">find_song_by_word</code><span class="sig-paren">(</span><em>word</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/worddict.html#find_song_by_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#worddict.find_song_by_word" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a key &lt;word&gt; provided by the caller, return the list of tuple
-(name, artist, album, lyric)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="worddict.generate_word_lyric_score_map">
-<code class="descclassname">worddict.</code><code class="descname">generate_word_lyric_score_map</code><span class="sig-paren">(</span><em>word_score_tuple_list</em>, <em>song_id</em>, <em>the_map</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/worddict.html#generate_word_lyric_score_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#worddict.generate_word_lyric_score_map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given list of tuple (i.e. (word, score)) for a song and this song’s id,
-add the corresponding information to a dictionary (or map) &lt;the_map&gt;.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="worddict.init_dict">
-<code class="descclassname">worddict.</code><code class="descname">init_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/worddict.html#init_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#worddict.init_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the dictionary for later on searching.
-Load the csv raw source file from S3 and put the content into global
-variable &lt;id_lyric_map&gt; and construct the word dictionary
-&lt;word_lyric_score_map&gt; based on tfidf.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="worddict.sort_by_score">
-<code class="descclassname">worddict.</code><code class="descname">sort_by_score</code><span class="sig-paren">(</span><em>the_map</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/worddict.html#sort_by_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#worddict.sort_by_score" title="Permalink to this definition">¶</a></dt>
-<dd><p>In the constructed dictionary &lt;word_lyric_score_map&gt;, sort the tuples
-associated with each key word according to the tfidf scores in the
-tuples, so that the tuples (id, score) having the higher scores are in
-front of the dictionary value (i.e., the tuple list)</p>
-</dd></dl>
-
+  <div class="section" id="worddict-module">
+<h1>worddict module<a class="headerlink" href="#worddict-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -108,14 +85,12 @@ front of the dictionary value (i.e., the tuple list)</p>
 </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -126,7 +101,7 @@ front of the dictionary value (i.e., the tuple list)</p>
       &copy;2018, Kaya Tollas, Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, and Sangyu Shen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |

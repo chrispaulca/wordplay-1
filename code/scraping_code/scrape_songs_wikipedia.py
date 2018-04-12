@@ -11,6 +11,7 @@ import os
 import re
 import csv
 import glob
+import codecs
 import platform
 import unidecode
 import requests
@@ -193,7 +194,7 @@ def scrape_singles(url, folder_name=None):
 
         filepath = os.path.join(folder_name, filename) + '.csv'
 
-        with open(filepath, mode='w', newline='', encoding='utf-8') as output:
+        with codecs.open(filepath, mode='w', encoding='utf-8') as output:
             # Deal with Windows inserting an extra '\r' in line terminators
             csv_writer = csv.writer(output, quoting=csv.QUOTE_ALL)
 
@@ -286,14 +287,14 @@ def clean_data(row):
         text_items = cell.findAll(text=True)
         no_footnotes = [text for text in text_items if text[0] != '[']
 
-        cleaned = (
-            ''.join(no_footnotes)  # Combine elements into single string
-            .replace('\xa0', ' ')  # Replace non-breaking spaces
+        cleaned = ''.join(no_footnotes)
+        cleaned = unidecode.unidecode(cleaned)
+        cleaned = (cleaned
+              # Replace non-breaking spaces
+            .replace('\xa0', ' ')
             .replace('\n', ' ')  # Replace newlines
             .strip()
         )
-
-        cleaned = unidecode.unidecode(cleaned)
         cleaned_cells += [cleaned]
 
     return cleaned_cells
