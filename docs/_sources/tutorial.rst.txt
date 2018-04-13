@@ -7,10 +7,10 @@ Go to code/scraping_code directory. Then run `$python scrape_songs_wikipedia.py`
 
 Algorithm:
 
-Go to code directory. Run $python tfidf.py and $python worddict.py to generate 
+Go to code/algorithms directory. Run $python tfidf.py and $python worddict.py to generate 
 {word:[(songID, TFIDF score), ... ]} and {word:[songID, ... ]} dictionaries. 
 
 
 Server:
 
-Run $python server.py in the code directory. 
+Go to code/server directory and run $python server.py 
