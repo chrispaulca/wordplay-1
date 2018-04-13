@@ -5,4 +5,4 @@ Created by Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, Sangyu Shen, an
 
 This is the source of **WordPlay**, a word-based playlist generator that, when given any word or phrase, creates a playlist of related songs. 
 
-Documentation \href{https://tollask.github.io/wordplay/index.html} {here}
+Documentation at https://tollask.github.io/wordplay/index.html
