@@ -3,6 +3,7 @@ Welcome to WordPlay's Documentation!
 
 WordPlay is a web application that takes a user-input word or phrase and generates a playlist of related songs.
 
+`WordPlay Github <https://github.com/tollask/wordplay>`_
 
 :Authors:
 Devin Bowers: Web development
