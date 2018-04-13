@@ -6,17 +6,17 @@ WordPlay is a web application that takes a user-input word or phrase and generat
 `WordPlay Github <https://github.com/tollask/wordplay>`_
 
 :Authors:
-Devin Bowers: Web development
+	Devin Bowers: Web development
 
-Si Chen: Algorithms
+	Si Chen: Algorithms
 
-Chris Csiszar: Data acquisition
+	Chris Csiszar: Data acquisition
 
-Khoury Ibrahim: Web development
+	Khoury Ibrahim: Web development
 
-Sangyu Shen: Algorithms
+	Sangyu Shen: Algorithms
 
-Kaya Tollas: Content/UX
+	Kaya Tollas: Content/UX
 
 
 Contents
