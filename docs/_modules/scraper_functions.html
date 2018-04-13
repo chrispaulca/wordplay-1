@@ -201,8 +201,12 @@
         <span class="n">elem</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">document</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_lyrics_iteration_</span><span class="si">%d</span><span class="s2">_marker.csv&quot;</span> <span class="o">%</span>
                     <span class="n">iteration</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 
+        <span class="c1"># we quit and restart the browser every so often to clear the </span>
+        <span class="c1"># browser&#39;s</span>
+        <span class="c1"># cache and prevent hangups,</span>
+
         <span class="c1"># we quit and restart the browser every so often to clear the browser&#39;s</span>
-       <span class="c1"># cache and prevent hangups,</span>
+        <span class="c1"># cache and prevent hangups,</span>
         <span class="c1"># timeouts, and hopefully the throttling of suspicious activity</span>
         <span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
 

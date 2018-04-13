@@ -13,4 +13,7 @@ s3_files = ['https://s3-us-west-2.amazonaws.com/wordplaydata/songs_lists/'
             'gs3.csv']
 
 for file in s3_files:
-    genius_scrape(file)
+    try:
+        genius_scrape(file)
+    except Exception:
+        print('error')
