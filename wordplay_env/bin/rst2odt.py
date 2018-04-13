@@ -1,7 +1,4 @@
-#!/usr/bin/env python2.7
-
-import os; activate_this=os.path.join(os.path.dirname(os.path.realpath(__file__)), 'activate_this.py'); exec(compile(open(activate_this).read(), activate_this, 'exec'), dict(__file__=activate_this)); del os, activate_this
-
+#!/Users/Devin/Desktop/MSAN/698_AppDev/wordplay/wordplay_env/bin/python3
 
 # $Id: rst2odt.py 5839 2009-01-07 19:09:28Z dkuhlman $
 # Author: Dave Kuhlman <dkuhlman@rexx.com>
@@ -30,3 +27,4 @@ writer = Writer()
 reader = Reader()
 output = publish_cmdline_to_binary(reader=reader, writer=writer,
     description=description)
+
