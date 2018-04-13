@@ -83,7 +83,7 @@ def scrape_billboards(start_url, search_str, singles=False):
             songs = songs_from_artists_albums_year(ar, al_ur)
             all_songs.append(songs)
 
-        output_name = search_str.replace(' ', '_')
+        output_name = os.path.join('data',search_str.replace(' ', '_'))
         songs_df = pd.concat(all_songs)
         songs_df.to_csv('{}'.format(output_name), index=False)
 
@@ -169,7 +169,7 @@ def scrape_singles(url, folder_name=None):
     """Create CSVs from all tables in a Wikipedia article. \n
     ARGS: \n
         url (str): The URL of the Wikipedia article to scrape tables from. \n
-        output_name (str): The base file name (without filepath) to write to.
+        folder_name (str): The folder to write to.
     """
 
     # Read tables from Wikipedia article into list of HTML strings
@@ -180,7 +180,7 @@ def scrape_singles(url, folder_name=None):
     output_name = os.path.split(url)[1]
 
     if folder_name is None:
-        folder_name = output_name
+        folder_name = os.path.join('data',output_name)
     # write data out
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
@@ -206,7 +206,8 @@ def scrape_singles(url, folder_name=None):
     df = df[['Single', 'Artist']]
     df.rename(columns={'Single': 'Song'}, inplace=True)
     df['Song'] = df['Song'].str.strip('"')
-    df.to_csv('{}.csv'.format(folder_name), index=False)
+    final_output_name = os.path.join('data','final_songs')
+    df.to_csv('{}.csv'.format(final_output_name), index=False)
 
 
 def write_html_table_to_csv(table, writer):
@@ -287,9 +288,13 @@ def clean_data(row):
         text_items = cell.findAll(text=True)
         no_footnotes = [text for text in text_items if text[0] != '[']
 
-        cleaned = ''.join(no_footnotes)
+        cleaned = (''.join(no_footnotes)
+                    .replace('\xa0', ' ')
+                    .strip()
+                    )
+
         cleaned = unidecode.unidecode(cleaned)
-        cleaned = cleaned.replace('\xa0', ' ').replace('\n', ' ').strip()
+
         cleaned_cells += [cleaned]
 
     return cleaned_cells

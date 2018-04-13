@@ -2,11 +2,12 @@
 This is the flask code for the webpage
 """
 
+import sys
 from flask import Flask, render_template, request
 from forms import SearchForm
-import sys
 sys.path.insert(0, '../algorithms/')
 from worddict import *
+
 
 app = Flask(__name__)
 init_dict()
@@ -34,10 +35,10 @@ def playlist(search):
     return render_template('playlist.html', playlist=playlist,
                            word=search.data['search'])
 
-if __name__ == '__main__':
-    host = '0.0.0.0'
-    port = 80
-    try:
-        app.run(host=host, port=port)
-    except:
-        print('failed to launch at {}:{}'.format(host,port))
+
+host = '0.0.0.0'
+port = 80
+try:
+    app.run(host=host, port=port)
+except Exception:
+    print('failed to launch at {}:{}'.format(host, port))
