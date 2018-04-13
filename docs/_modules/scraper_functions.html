@@ -1,0 +1,280 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>scraper_functions &#8212; WordPlay 1.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for scraper_functions</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;These functions scrape lyrics from genius.com given song and artist</span>
+<span class="sd">input.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">expanduser</span>
+
+<span class="kn">import</span> <span class="nn">selenium</span>
+<span class="kn">from</span> <span class="nn">selenium</span> <span class="k">import</span> <span class="n">webdriver</span>
+
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.keys</span> <span class="k">import</span> <span class="n">Keys</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="k">import</span> <span class="n">By</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="k">import</span> <span class="n">WebDriverWait</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="k">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
+
+
+<span class="n">Path2ChromeDriverEXE</span> <span class="o">=</span> <span class="s1">&#39;/Users/chrispaul/Desktop/chromedriver&#39;</span>
+
+
+<div class="viewcode-block" id="cutt"><a class="viewcode-back" href="../scraper_functions.html#scraper_functions.cutt">[docs]</a><span class="k">def</span> <span class="nf">cutt</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve first n words of a string sentence s.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="n">n</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="genius_scrape"><a class="viewcode-back" href="../scraper_functions.html#scraper_functions.genius_scrape">[docs]</a><span class="k">def</span> <span class="nf">genius_scrape</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes song info and attempts to grab its lyrics from genius.com.</span>
+
+<span class="sd">    Takes a csv containing song title and artist information and attempts to</span>
+<span class="sd">    scrape each record&#39;s</span>
+<span class="sd">    lyrics if available through a generic search on Genius&#39;s website.</span>
+<span class="sd">    Truncates</span>
+<span class="sd">    artist field to two words.</span>
+<span class="sd">    Assumes columns named &quot;Song&quot; and &quot;Artist&quot; exist, and that the input is of</span>
+<span class="sd">    csv format. As a</span>
+<span class="sd">    safety measure, splits lengthy arrays into arrays approx 500 records long,</span>
+<span class="sd">    to save progress</span>
+<span class="sd">    periodically and reload the scraping browser between sections.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">data_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+
+    <span class="n">artists</span> <span class="o">=</span> <span class="n">data_raw</span><span class="p">[</span><span class="s2">&quot;Artist&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># truncate artist field to 2 words</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">artists</span><span class="p">)):</span>
+        <span class="n">artists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cutt</span><span class="p">(</span><span class="n">artists</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">data_raw</span><span class="p">[</span><span class="s1">&#39;artist_trunc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">artists</span>
+
+    <span class="c1"># define the search term to input on Genius&#39; webpage</span>
+    <span class="n">data_raw</span><span class="p">[</span><span class="s2">&quot;search_term&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_raw</span><span class="p">[</span><span class="s2">&quot;Song&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> \
+        <span class="n">data_raw</span><span class="p">[</span><span class="s2">&quot;artist_trunc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="c1"># split lengthy files into pieces</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_raw</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">600</span><span class="p">:</span>
+        <span class="n">collection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">data_raw</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_raw</span><span class="p">)</span> <span class="o">%</span> <span class="mi">400</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">collection</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">collection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_raw</span><span class="p">)</span>
+
+    <span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># setting options for the browser</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">ChromeOptions</span><span class="p">()</span>
+    <span class="n">prefs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;profile.managed_default_content_settings.images&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;profile.managed_default_content_settings.javascript&quot;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">}</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">add_experimental_option</span><span class="p">(</span><span class="s2">&quot;prefs&quot;</span><span class="p">,</span> <span class="n">prefs</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+
+        <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">lyrics_raw</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># start the browser</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">Path2ChromeDriverEXE</span><span class="p">,</span> <span class="n">chrome_options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://genius.com/Ed-sheeran-shape-of-you-lyrics&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">elem</span><span class="p">[</span><span class="s1">&#39;search_term&#39;</span><span class="p">]:</span>
+
+            <span class="n">lyrics_gotten</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># wait only the amount of time necessary for the specified HTML</span>
+                <span class="c1"># element to appear</span>
+                <span class="n">element</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span>
+                    <span class="n">EC</span><span class="o">.</span><span class="n">presence_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span>
+                                                    <span class="s1">&#39;/ html/body/div[1]/sear&#39;</span>
+                                                    <span class="s1">&#39;ch-form/form/input&#39;</span><span class="p">))</span>
+                <span class="p">)</span>
+
+                <span class="n">search</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span>
+                    <span class="s1">&#39;/html/body/div[1]/search-form/form/input&#39;</span><span class="p">)</span>
+
+                <span class="c1"># send search term to search box and submit</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+
+                <span class="n">element</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span>
+                    <span class="n">EC</span><span class="o">.</span><span class="n">presence_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span>
+                                                    <span class="s1">&#39;/html/body/routable-pa&#39;</span>
+                                                    <span class="s1">&#39;ge/ng-outlet/search-&#39;</span>
+                                                    <span class="s1">&#39;results-page/div/div[2&#39;</span>
+                                                    <span class="s1">&#39;]/div[1]/div[2]/search&#39;</span>
+                                                    <span class="s1">&#39;-result-section/div/di&#39;</span>
+                                                    <span class="s1">&#39;v[2]/search-result-items/&#39;</span>
+                                                    <span class="s1">&#39;div[1]/search-result-it&#39;</span>
+                                                    <span class="s1">&#39;em/div/mini-song-card/a/&#39;</span>
+                                                    <span class="s1">&#39;div[2]&#39;</span><span class="p">))</span>
+                <span class="p">)</span>
+
+                <span class="c1"># click the top recommended song link</span>
+                <span class="n">toplink</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s1">&#39;/html/body/routable-&#39;</span>
+                                                       <span class="s1">&#39;page/ng-outlet/searc&#39;</span>
+                                                       <span class="s1">&#39;h-results-page/div/di&#39;</span>
+                                                       <span class="s1">&#39;v[2]/div[1]/div&#39;</span>
+                                                       <span class="s1">&#39;[2]/search-result-sec&#39;</span>
+                                                       <span class="s1">&#39;tion/div/div[2]/searc&#39;</span>
+                                                       <span class="s1">&#39;h-result-items/&#39;</span>
+                                                       <span class="s1">&#39;div[1]/search-result-&#39;</span>
+                                                       <span class="s1">&#39;item/div/mini-song-ca&#39;</span>
+                                                       <span class="s1">&#39;rd/a/div[2]&#39;</span><span class="p">)</span>
+                <span class="n">toplink</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+
+                <span class="n">element</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span>
+                    <span class="n">EC</span><span class="o">.</span><span class="n">presence_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s1">&#39;/html/body/&#39;</span>
+                                                    <span class="s1">&#39;routable-page/ng-outlet&#39;</span>
+                                                    <span class="s1">&#39;/song-page/div/div/div[2&#39;</span>
+                                                    <span class="s1">&#39;]/&#39;</span>
+                                                    <span class="s1">&#39;div[1]/div/defer-compile&#39;</span>
+                                                    <span class="s1">&#39;[1]/lyrics/div/section&#39;</span><span class="p">))</span>
+                <span class="p">)</span>
+
+                <span class="c1"># grab lyrics</span>
+                <span class="n">lyrics</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s1">&#39;/html/body/routable-p&#39;</span>
+                                                      <span class="s1">&#39;age&#39;</span>
+                                                      <span class="s1">&#39;/ng-outlet/song-page&#39;</span>
+                                                      <span class="s1">&#39;/div/div/div[2]/div[&#39;</span>
+                                                      <span class="s1">&#39;1]/div/defer-comp&#39;</span>
+                                                      <span class="s1">&#39;ile[1]/lyrics/div&#39;</span>
+                                                      <span class="s1">&#39;/section&#39;</span><span class="p">)</span>
+                <span class="n">lyrics_text</span> <span class="o">=</span> <span class="n">lyrics</span><span class="o">.</span><span class="n">text</span>
+
+                <span class="c1"># append lyrics to results</span>
+                <span class="n">lyrics_raw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lyrics_text</span><span class="p">)</span>
+                <span class="n">lyrics_gotten</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="c1"># not the best except clause but will do for now</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">NameError</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="n">lyrics_gotten</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">lyrics_raw</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;say &quot;there was a scraping error&quot;&#39;</span><span class="p">)</span>
+                <span class="k">pass</span>
+
+        <span class="c1"># place scraped lyrics into our dataframe for identification</span>
+        <span class="n">elem</span><span class="p">[</span><span class="s1">&#39;lyrics_raw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lyrics_raw</span>
+
+        <span class="n">elem</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">document</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_lyrics_iteration_</span><span class="si">%d</span><span class="s2">_marker.csv&quot;</span> <span class="o">%</span>
+                    <span class="n">iteration</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+        <span class="c1"># we quit and restart the browser every so often to clear the browser&#39;s</span>
+       <span class="c1"># cache and prevent hangups,</span>
+        <span class="c1"># timeouts, and hopefully the throttling of suspicious activity</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+
+    <span class="c1"># append all sections if necessary</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">interesting_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.csv&quot;</span><span class="p">)</span>
+        <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">interesting_files</span><span class="p">):</span>
+            <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="n">full_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">)</span>
+
+        <span class="n">full_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;output.csv&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">WordPlay</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">scraping_code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#algorithms">algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#server">server</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Kaya Tollas, Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, and Sangyu Shen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -31,9 +31,13 @@ def playlist(search):
     Reads in the playlist information and displays to the user
     """
     playlist = find_song_by_word(search.data['search'].lower())
-    print(playlist)
     return render_template('playlist.html', playlist=playlist,
                            word=search.data['search'])
 
-
-app.run(host='0.0.0.0', port=80)
+if __name__ == '__main__':
+    host = '0.0.0.0'
+    port = 80
+    try:
+        app.run(host=host, port=port)
+    except:
+        print('failed to launch at {}:{}'.format(host,port))

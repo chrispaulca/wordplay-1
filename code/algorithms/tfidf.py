@@ -1,6 +1,7 @@
 import sys
 
 import nltk
+import unidecode
 from nltk.stem.porter import *
 from sklearn.feature_extraction import stop_words
 try:
@@ -118,6 +119,7 @@ def summarize(tfidf, text, n=0):
     Given a trained TfidfVectorizer object and some XML text, return
     up to n (word,score) pairs in a list.
     """
+    text = unidecode.unidecode(text)
     sparse_matrix = tfidf.transform([text])
     word_index_array = sparse_matrix.nonzero()[1]
     aaa = sparse_matrix.nonzero()[0]

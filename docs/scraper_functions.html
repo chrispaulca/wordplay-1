@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>scraper_functions module &#8212; WordPlay 1.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -31,8 +23,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
@@ -40,8 +31,32 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="scraper-functions-module">
-<h1>scraper_functions module<a class="headerlink" href="#scraper-functions-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-scraper_functions">
+<span id="scraper-functions-module"></span><h1>scraper_functions module<a class="headerlink" href="#module-scraper_functions" title="Permalink to this headline">¶</a></h1>
+<p>These functions scrape lyrics from genius.com given song and artist
+input.</p>
+<dl class="function">
+<dt id="scraper_functions.cutt">
+<code class="descclassname">scraper_functions.</code><code class="descname">cutt</code><span class="sig-paren">(</span><em>s</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scraper_functions.html#cutt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scraper_functions.cutt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve first n words of a string sentence s.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="scraper_functions.genius_scrape">
+<code class="descclassname">scraper_functions.</code><code class="descname">genius_scrape</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/scraper_functions.html#genius_scrape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scraper_functions.genius_scrape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes song info and attempts to grab its lyrics from genius.com.</p>
+<p>Takes a csv containing song title and artist information and attempts to
+scrape each record’s
+lyrics if available through a generic search on Genius’s website.
+Truncates
+artist field to two words.
+Assumes columns named “Song” and “Artist” exist, and that the input is of
+csv format. As a
+safety measure, splits lengthy arrays into arrays approx 500 records long,
+to save progress
+periodically and reload the scraping browser between sections.</p>
+</dd></dl>
+
 </div>
 
 
@@ -85,12 +100,14 @@
 </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -101,7 +118,7 @@
       &copy;2018, Kaya Tollas, Devin Bowers, Si Chen, Chris Csiszar, Khoury Ibrahim, and Sangyu Shen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |

@@ -169,9 +169,14 @@ def genius_scrape(document):
         elem.to_csv(document[:-4] + "_lyrics_iteration_%d_marker.csv" %
                     iteration, encoding='utf-8')
 
+<<<<<<< HEAD
         # we quit and restart the browser every so often to clear the browse
         # r's
         # cache and prevent hangups,
+=======
+        # we quit and restart the browser every so often to clear the browser's
+       # cache and prevent hangups,
+>>>>>>> 89fb703d27d9c1d96ba497bcc2fb3683ae0c2e67
         # timeouts, and hopefully the throttling of suspicious activity
         driver.quit()
 
